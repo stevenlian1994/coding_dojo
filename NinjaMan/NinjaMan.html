@@ -1,0 +1,181 @@
+<html>
+    <head>
+        <title>NinjaMan</title>
+        <style type="text/css"> 
+        * {
+            margin: 0;
+            padding: 0;
+        }
+            .wall {
+                background-color: blue;
+                height: 40px;
+                width: 40px;
+                display: inline-block;
+            }
+            .row {
+                line-height: 0;
+            }
+            .sushi {
+                background-color: black;
+                background-image: url("img/sushi.png");
+                background-size: contain;
+                height: 40px;
+                width: 40px;
+                display: inline-block;
+            }
+            .onigiri {
+                background-color: black;
+                background-image: url("img/onigiri.png");
+                background-size: contain;
+                height: 40px;
+                width: 40px;
+                display: inline-block;
+            }
+            .ghost {
+                background-color: black;
+                background-image: url("img/pinky.gif");
+                background-size: contain;
+                height: 40px;
+                width: 40px;
+                display: inline-block;
+                position: absolute; 
+                left: 160px;
+                top: 160px;
+            }
+            .blank {
+                background-color: black;
+                height: 40px;
+                width: 40px;
+                display: inline-block;
+            }
+            #ninjaman {
+                background-color: black;
+                background-image: url("img/ninja.gif");
+                background-size: contain;
+                height: 40px;
+                width: 40px;
+                display: inline-block;
+                position: absolute;
+                left: 40px;
+                top: 40px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id='world'></div>
+        <div id='ninjaman'></div>
+        <div class='ghost'></div> 
+    </body>
+    <script type='text/javascript'>
+
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * Math.floor(max));
+        }
+
+        var world = [];
+        function createWorld(){ 
+            var array2 = [];
+            for(var m=0; m < 6; m++){
+                for (var n=0; n < 6; n++) {
+                    array2.push(getRandomInt(4));
+                }
+                world.push(array2);
+                array2 = [];
+            }
+        }
+        createWorld();
+
+        var worldDict = {
+            0: 'blank',
+            1: 'wall',
+            2: 'sushi',
+            3: 'onigiri'
+        }
+        var scoreCount = 0;
+
+        //function for drawing world using array generated in createWorld()
+        function drawWorld(){
+            output = '';
+            for(var row=0; row < world.length; row++) {
+                output +="<div class = 'row'>";
+                for(var x = 0; x < world[row].length; x++) {
+                    output +="<div class ="+worldDict[world[row][x]]+"></div>";
+                }
+                output+="</div>";
+            }
+            document.getElementById('world').innerHTML = output;
+        }
+        drawWorld();
+
+
+        var ninjaman = {
+            x: 1,
+            y: 1
+        }
+
+        function drawNinjaman(){
+            document.getElementById('ninjaman').style.top = ninjaman.y * 40 + 'px';
+            document.getElementById('ninjaman').style.left = ninjaman.x * 40 + 'px';
+        }
+
+        drawNinjaman();
+
+                
+        document.onkeydown = function(e) {
+
+            if (e.keyCode == 38) {
+                //top
+                if(world[ninjaman.y-1][ninjaman.x] != 1){
+                    ninjaman.y--;
+                }
+            } else if (e.keyCode == 40) {
+                //down
+                if(world[ninjaman.y+1][ninjaman.x] != 1){
+                    ninjaman.y++;
+                }
+            } else if (e.keyCode == 37) {
+                //left
+                if (world[ninjaman.y][ninjaman.x-1] != 1) {
+                    ninjaman.x--;
+                }  
+            } else if (e.keyCode == 39) {
+                //right
+                if (world[ninjaman.y][ninjaman.x+1] != 1) {
+                    ninjaman.x++;
+                }  
+            }
+            if (world[ninjaman.y][ninjaman.x] == 2) {
+                scoreCount += 10;
+                console.log('Score is: ' + scoreCount);
+            } else if (world[ninjaman.y][ninjaman.x] == 3) {
+                scoreCount += 5;
+                console.log('Score is: ' + scoreCount);
+            }
+
+            world[ninjaman.y][ninjaman.x] = 0;
+            drawNinjaman();
+            drawWorld();
+        }
+
+        //keep score of how many sushi's ninjaman eats
+        //sushi = 10 pts onigiri = 5pts
+        // hacker challgenges - random world
+        //hacker challenges - create ghosts that chase ninjaman
+
+
+
+    </script>
+</html>
+
+<!-- // function drawWorld(){
+    //     output = '';
+    //     for(var row=0; row < world.length; row++) {
+    //         output +="<div class = 'row'>";
+    //         for(var x = 0; x < world[row].length; x++) {
+    //             output +="<div class ="+worldDict[world[row][x]]+"></div>";
+    //         }
+    //         output+="</div>";
+    //     }
+    //     document.getElementById('world').innerHTML = output;
+    // }
+    // drawWorld(); -->
